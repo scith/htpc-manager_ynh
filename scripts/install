@@ -143,7 +143,6 @@ fi
 sudo yunohost app setting $app_id public -v "$app_public"
 sudo yunohost app setting $app_id method -v "$app_method"
 sudo yunohost app setting $app_id host -v "$app_host"
-sudo yunohost app setting $app_id port -v "$app_port"
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload

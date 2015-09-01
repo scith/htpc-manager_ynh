@@ -17,7 +17,6 @@ app_method="$(sudo yunohost app setting ${app_id} method)"
 app_domain="$(sudo yunohost app setting ${app_id} domain)"
 app_path="$(sudo yunohost app setting ${app_id} path)"
 app_host="$(sudo yunohost app setting ${app_id} host)"
-app_port="$(sudo yunohost app setting ${app_id} port)"
 
 
 # Make upgrade if localhost installation
