@@ -59,7 +59,7 @@ if [[ $app_method == "LOCAL"* ]]; then
 	
 	# Install dependencies (using virtualenv)
 	if [[ $(python --version 2>&1) != Python\ 2* ]]; then
-		app_python_bin=$app_install_dir/bin/python
+		app_python_bin="${app_install_dir}/bin/python"
 		sudo apt-get install -y python-pip python-virtualenv python-dev uwsgi uwsgi-plugin-python
 		sudo virtualenv $app_install_dir
 		sudo bash -c "source $app_install_dir/bin/activate && pip install cheetah"
@@ -92,7 +92,7 @@ if [[ $app_method == "LOCAL"* ]]; then
 	sudo cp -a $app_src_dfts /etc/default/$app_id
 	sudo cp -a $app_src_init /etc/init.d/$app_id
 	
-	# Set log file
+	# Redirect log file
 	if [[ $app_logs_dir != $app_data_dir ]]; then
 		sudo mkdir -p $app_logs_dir
 		sudo chown -R $app_user $app_logs_dir
