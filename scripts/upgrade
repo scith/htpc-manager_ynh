@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Basic variable declaration
+BASEDIR="$(dirname "$(pwd)")"
+
+# Common variable declaration
+app_id=htpc-manager
+app_user=htpc-manager
+app_install_dir="/opt/yunohost/${app_id}"
+## Sources definitions
+app_src_init="$BASEDIR/conf/${app_id}.init"
+app_src_nginx_conf="$BASEDIR/conf/nginx.conf"
+
+# Retrieve arguments
+app_public="$(sudo yunohost app setting ${app_id} public)"
+app_method="$(sudo yunohost app setting ${app_id} method)"
+app_domain="$(sudo yunohost app setting ${app_id} domain)"
+app_path="$(sudo yunohost app setting ${app_id} path)"
+app_host="$(sudo yunohost app setting ${app_id} host)"
+app_port="$(sudo yunohost app setting ${app_id} port)"
+
+
+# Make upgrade if localhost installation
+if [[ $app_method == "LOCAL"* ]]; then
+
+	# Kill App
+	sudo service $app_id stop
+	sudo killall $app_id
+	
+	# Upgrade to the latest version of app using the fork
+	cd $app_install_dir && sudo git pull
+	cd -
+
+	# Upgrade dependencies
+	
+	# Update init file
+	sudo cp -a $app_src_init /etc/init.d/$app_id
+	
+	# Set rights
+	sudo chown -R $app_user $app_install_dir
+	sudo chmod +x /etc/init.d/$app_id
+	sudo chmod +x -R $app_install_dir
+	
+	# Reload daemon
+	sudo service $app_id start
+	
+fi
+
+
+# Remove trailing "/" for next commands
+app_path=${app_path%/}
+
+# Configure Nginx 
+sudo sed -i "s@PATHTOCHANGE@$app_path@g" $app_src_nginx_conf
+sudo sed -i "s@HOSTTOCHANGE@$app_host@g" $app_src_nginx_conf
+sudo cp $app_src_nginx_conf /etc/nginx/conf.d/$app_domain.d/$app_id.conf
+
+# If app is public, add url to SSOWat conf as skipped_uris
+if [[ $app_public = "Yes" ]];
+then
+	# See install script
+	sudo yunohost app setting $app_id unprotected_uris -v "/"
+	# Remove old settings
+	sudo yunohost app setting $app_id skipped_uris -d
+fi
+
+# Reload Nginx and regenerate SSOwat conf
+sudo service nginx reload
+sudo yunohost app ssowatconf

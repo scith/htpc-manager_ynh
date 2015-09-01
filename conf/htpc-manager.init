@@ -1,0 +1,141 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          HTPC-Manager
+# Required-Start:    $local_fs $network $remote_fs
+# Required-Stop:     $local_fs $network $remote_fs
+# Should-Start:      $NetworkManager
+# Should-Stop:       $NetworkManager
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts instance of HTPC-Manager
+# Description:       starts instance of HTPC-Manager using start-stop-daemon
+### END INIT INFO
+
+
+# Check for existence of defaults file
+# and utilize if available
+if [ -f /etc/default/htpc-manager ]; then
+    . /etc/default/htpc-manager
+else
+    echo "/etc/default/htpc-manager not found using default settings.";
+fi
+
+. /lib/lsb/init-functions
+
+# Script name
+NAME=htpc-manager
+
+# App name
+DESC=HTPC-Manager
+
+## Don't edit this file
+## Edit user configuation in /etc/default/htpc-manager to change
+##
+## HTPC_USER= #$RUN_AS, username to run HTPC-Manager under, the default is htpc-manager
+## HTPC_HOME= #$APP_PATH, the location of Htpc.py, the default is /opt/htpc-manager
+## HTPC_DATA= #$DATA_DIR, the location of htpc-manager.db, cache, logs, the default is /var/opt/htpc-manager
+## HTPC_PIDFILE= #$PID_FILE, the location of htpc-manager.pid, the default is /var/run/htpc-manager/htpc-manager.pid
+## PYTHON_BIN= #$DAEMON, the location of the python binary, the default is /usr/bin/python
+## HTPC_OPTS= #$EXTRA_DAEMON_OPTS, extra cli option for htpc-manager, i.e. " --webdir /htpc-manager"
+## SSD_OPTS= #$EXTRA_SSD_OPTS, extra start-stop-daemon option like " --group=users"
+##
+## EXAMPLE if want to run as different user
+## add HTPC_USER=username to /etc/default/htpc-manager
+## otherwise default htpc-manager is used
+
+# Run HTPC-Manager as username
+RUN_AS=${HTPC_USER-htpc-manager}
+
+# Path to app
+# HTPC_HOME=path_to_app_CouchPotato.py
+APP_PATH=${HTPC_HOME-/opt/htpc-manager/}
+
+# Data directory where htpc-manager.db, cache and logs are stored
+DATA_DIR=${HTPC_DATA-/var/opt/htpc-manager}
+
+# Path to store PID file
+PID_FILE=${HTPC_PIDFILE-/var/run/htpc-manager/htpc-manager.pid}
+
+# path to python bin
+DAEMON=${PYTHON_BIN-/usr/bin/python}
+
+# Extra daemon option like: HTPC_OPTS=" --webdir /htpc-manager"
+EXTRA_DAEMON_OPTS=${HTPC_OPTS-}
+
+# Extra start-stop-daemon option like START_OPTS=" --group=users"
+EXTRA_SSD_OPTS=${SSD_OPTS-}
+
+# Hardcoded port to run on, overrides config.ini settings
+[ -n "$HTPC_PORT" ] && {
+	PORT_OPTS="--port ${HTPC_PORT}"
+}
+
+## Parameter	 | Description 				| Default value 
+## ————————————— | ———————————————————————————————————— | ————————————– 
+## debug 	 | Run in debug mode 			| none 
+## daemon 	 | Daemonize process 			| none 
+## port 	 | Listen on specific port 		| 8085 
+## db 		 | Use a custom database 		| none 
+## datadir 	 | Set the data directory 		| none 
+## host 	 | Use a specific host/IP 		| None/any 
+## pid 		 | Location to generate pid file 	| false 
+## webdir 	 | Mount HTPC Manager on a custom url 	| /
+
+
+PID_PATH=`dirname $PID_FILE`
+DAEMON_OPTS="Htpc.py --daemon --pid ${PID_FILE} --datadir ${DATA_DIR} ${PORT_OPTS} ${EXTRA_DAEMON_OPTS}"
+
+
+test -x $DAEMON || exit 0
+
+set -e
+
+# Create PID directory if not exist and ensure the HTPC-Manager user can write to it
+if [ ! -d $PID_PATH ]; then
+    mkdir -p $PID_PATH
+    chown $RUN_AS $PID_PATH
+fi
+
+if [ ! -d $DATA_DIR ]; then
+    mkdir -p $DATA_DIR
+    chown $RUN_AS $DATA_DIR
+fi
+
+if [ -e $PID_FILE ]; then
+    PID=`cat $PID_FILE`
+    if ! kill -0 $PID > /dev/null 2>&1; then
+        echo "Removing stale $PID_FILE"
+        rm $PID_FILE
+    fi
+fi
+
+case "$1" in
+  start)
+        touch $PID_FILE
+        chown $RUN_AS $PID_FILE
+        echo "Starting $DESC"
+        start-stop-daemon -d $APP_PATH -c $RUN_AS $EXTRA_SSD_OPTS --start --background --pidfile $PID_FILE  --exec $DAEMON -- $DAEMON_OPTS
+        ;;
+  stop)
+        echo "Stopping $DESC"
+        start-stop-daemon --stop --pidfile $PID_FILE --retry 15 --oknodo
+        ;;
+
+  restart|force-reload)
+        echo "Restarting $DESC"
+        start-stop-daemon --stop --pidfile $PID_FILE --retry 15 --oknodo
+        start-stop-daemon -d $APP_PATH -c $RUN_AS $EXTRA_SSD_OPTS --start --background --pidfile $PID_FILE  --exec $DAEMON -- $DAEMON_OPTS
+        ;;
+
+  status)
+       status_of_proc -p $PID_FILE "$DAEMON" "$NAME"
+        ;;
+  *)
+        N=/etc/init.d/$NAME
+        echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
