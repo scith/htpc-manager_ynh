@@ -24,9 +24,13 @@ if [[ $app_method == "LOCAL"* ]]; then
 	# Delete app user
 	sudo deluser $app_user
 	
-	# Remove sources & logs
+	# Remove sources
 	sudo rm -rf $app_install_dir
-	sudo rm -rf $app_logs_dir
+
+	# Redirect log file
+	if [[ $app_logs_dir != $app_data_dir ]]; then
+		sudo rm -rf $app_logs_dir
+	fi
 
 	# Remove data
 	if [[ $keep_data == "No" ]]; then

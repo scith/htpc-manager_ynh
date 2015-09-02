@@ -7,6 +7,8 @@ BASEDIR="$(dirname "$(pwd)")"
 app_id=htpc-manager
 app_user=htpc-manager
 app_install_dir="/opt/yunohost/${app_id}"
+app_data_dir="/home/yunohost.app/${app_id}"
+app_logs_dir="/var/log/${app_id}"
 ## Sources definitions
 app_src_init="$BASEDIR/conf/${app_id}.init"
 app_src_nginx_conf="$BASEDIR/conf/nginx.conf"
@@ -31,6 +33,11 @@ if [[ $app_method == "LOCAL"* ]]; then
 	cd -
 
 	# Upgrade dependencies
+	
+	# Redirect log file
+	if [[ $app_logs_dir != $app_data_dir ]]; then
+		sudo sed -i "s@self.logfile =.*@self.logfile = '$app_logs_dir/$app_id.log'@g" $app_install_dir/htpc/log.py
+	fi
 	
 	# Update init file
 	sudo cp -a $app_src_init /etc/init.d/$app_id
