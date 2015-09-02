@@ -97,10 +97,7 @@ if [[ $app_method == "LOCAL"* ]]; then
 		sudo mkdir -p $app_logs_dir
 		sudo chown -R $app_user $app_logs_dir
 		sudo chmod +x -R $app_logs_dir
-		app_log_file="${app_logs_dir}/${app_id}.log"
-		sudo sed -i "s@self.logfile =.*@self.logfile = '$app_log_file'@g" $app_install_dir/htpc/log.py
-	else
-		app_log_file="${app_data_dir}/htpcmanager.log"
+		sudo sed -i "s@self.logfile =.*@self.logfile = '$app_logs_dir/$app_id.log'@g" $app_install_dir/htpc/log.py
 	fi
 	
 	# Set rights
@@ -111,7 +108,7 @@ if [[ $app_method == "LOCAL"* ]]; then
 	sudo chmod +x -R $app_data_dir
 	
 	# Add service to YunoHost's monitoring
-	sudo yunohost service add $app_id --log $app_log_file --status "ps aux | grep $app_id | grep -v grep"
+	sudo yunohost service add $app_id --log $app_logs_dir --status "ps aux | grep $app_id | grep -v grep"
 	
 	# Start daemon at boot
 	sudo update-rc.d $app_id defaults
