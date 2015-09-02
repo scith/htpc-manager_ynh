@@ -27,7 +27,7 @@ if [[ $app_method == "LOCAL"* ]]; then
 	# Remove sources
 	sudo rm -rf $app_install_dir
 
-	# Redirect log file
+	# Remove logs
 	if [[ $app_logs_dir != $app_data_dir ]]; then
 		sudo rm -rf $app_logs_dir
 	fi
