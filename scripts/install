@@ -20,13 +20,13 @@ BASEDIR="$(dirname "$(pwd)")"
 # Common variable declaration
 app_id=htpc-manager
 app_user=htpc-manager
+app_local_host="127.0.0.1"
+app_python_bin="/usr/bin/python"
 ## Destinations definitions
 app_install_dir="/opt/yunohost/${app_id}"
 app_data_dir="/home/yunohost.app/${app_id}"
 app_logs_dir="/var/log/${app_id}"
 app_pid_file="/var/run/${app_id}/${app_id}.pid"
-app_python_bin="/usr/bin/python"
-app_local_host="127.0.0.1"
 ## Sources definitions
 app_src_dfts="$BASEDIR/conf/${app_id}.defaults"
 app_src_init="$BASEDIR/conf/${app_id}.init"
@@ -93,7 +93,7 @@ if [[ $app_method == "LOCAL"* ]]; then
 	sudo cp -a $app_src_init /etc/init.d/$app_id
 	
 	# Redirect log file
-	if [[ $app_logs_dir != $app_data_dir ]]; then
+	if [[ $app_logs_dir != "$app_data_dir"* ]]; then
 		sudo mkdir -p $app_logs_dir
 		sudo chown -R $app_user $app_logs_dir
 		sudo chmod +x -R $app_logs_dir

@@ -28,7 +28,7 @@ if [[ $app_method == "LOCAL"* ]]; then
 	sudo rm -rf $app_install_dir
 
 	# Remove logs
-	if [[ $app_logs_dir != $app_data_dir ]]; then
+	if [[ $app_logs_dir != "$app_data_dir"* ]]; then
 		sudo rm -rf $app_logs_dir
 	fi
 
