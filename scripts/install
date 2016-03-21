@@ -1,17 +1,10 @@
 #!/bin/bash
 
-# causes the shell to exit if any subcommand or pipeline returns a non-zero status
-set -e
-
 app=htpc-manager
 
 # Retrieve arguments
 	domain=$1
 	path=$2
-
-# Check domain/path availability
-	sudo yunohost app checkurl $domain$path -a $app \
-		|| (echo "Path not available: $domain$path" && exit 1)
 
 # Find an unused port
 	port=8089
@@ -22,6 +15,13 @@ app=htpc-manager
 		sudo yunohost app checkport $port
 	done
 	sudo yunohost app setting $app port -v "$port"
+
+# causes the shell to exit if any subcommand or pipeline returns a non-zero status
+set -e
+
+# Check domain/path availability
+	sudo yunohost app checkurl $domain$path -a $app \
+		|| (echo "Path not available: $domain$path" && exit 1)
 
 # Install dependencies
 	sudo apt-get install -y -qq build-essential git python-imaging python-dev python-setuptools python-pip python-cherrypy vnstat
