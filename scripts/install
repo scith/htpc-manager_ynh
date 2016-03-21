@@ -66,12 +66,9 @@ app=htpc-manager
 # Start service
 	sudo service $app start
 
-# Remove trailing "/" for next commands
-	path=${app_path%/}
-
 # Nginx
-	sed -i "s@YNH_WWW_PATH@$path@g" ../conf/nginx.conf
-	sed -i "s@YNH_WWW_ALIAS@$final_path/@g" ../conf/nginx.conf
+	sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
+	sed -i "s@PROXYTOCHANGE@http://127.0.0.1:${port}${path%/}@g" ../conf/nginx.conf
 	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 
 # Reload Nginx and regenerate SSOwat conf
