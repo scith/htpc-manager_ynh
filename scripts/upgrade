@@ -22,7 +22,7 @@ app=htpc-manager
 	sudo cp -a ../sources/. $final_path
 
 # Update daemon
-	sudo cp -a ../conf/htpc-manager.init /etc/init.d/$app
+	sudo cp -a ../conf/htpc-manager.service /etc/systemd/system/$app.service
 	
 # Redirect log file
 	log_path=/var/log/$app
@@ -40,9 +40,6 @@ app=htpc-manager
 	
 # Start service
 	sudo service $app start
-
-# Remove trailing "/" for next commands
-	path=${app_path%/}
 
 # Nginx
 	sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf

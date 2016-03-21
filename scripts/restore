@@ -20,21 +20,17 @@ app=htpc-manager
 	sudo cp -a $backup_dir/data/. /home/yunohost.app/$app
 	
 	# Restore daemon config
-	sudo cp -a $backup_dir/conf/$app.default /etc/default/$app
-	sudo cp -a $backup_dir/conf/$app.init /etc/init.d/$app
+	sudo cp -a $backup_dir/conf/$app.service /etc/systemd/system/$app.service
 	
 	# Set rights
 	sudo chown -R $app /opt/yunohost/$app
 	sudo chown -R $app /home/yunohost.app/$app
-	sudo chmod +x /etc/init.d/$app
 	sudo chmod +x -R /opt/yunohost/$app
 	sudo chmod +x -R /home/yunohost.app/$app
 	
 	# Start daemon at boot
-	sudo update-rc.d $app defaults
-	
-	# Reload daemon
-	sudo service $app restart
+	sudo systemctl daemon-reload
+	sudo systemctl enable $app.service
 
 # Restore Nginx and YunoHost parameters
 	sudo cp -a $backup_dir/yunohost/. /etc/yunohost/apps/$app

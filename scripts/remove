@@ -5,10 +5,11 @@ app=htpc-manager
 	domain=$(sudo yunohost app setting $app domain)
 	path=$(sudo yunohost app setting $app path)
 
-# Kill app and remove from boot
+# Remove init script
 	sudo service $app stop
-	sudo killall $app
-	sudo update-rc.d $app remove
+	sudo systemctl disable $app.service
+	sudo rm -rf /etc/systemd/system/$app.service
+	sudo systemctl daemon-reload
 	
 # Delete app user
 	sudo deluser $app
@@ -21,11 +22,6 @@ app=htpc-manager
 
 # Remove data
 	sudo rm -rf /home/yunohost.app/$app
-	
-# Remove daemon config
-	sudo rm -f /etc/init.d/$app
-	sudo rm -f /etc/default/$app
-	sudo rm -rf /var/run/$app
 
 # Remove configuration files
 	sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf

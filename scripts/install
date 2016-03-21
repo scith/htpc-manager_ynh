@@ -38,10 +38,11 @@ app=htpc-manager
 	id -u $app &>/dev/null || sudo useradd --home-dir $data_path --shell /bin/false $app
 	
 # Configure daemon
-	sudo sed -i "s@PATHTOCHANGE@$path@g" ../conf/htpc-manager.defaults
-	sudo sed -i "s@PORTTOCHANGE@$port@g" ../conf/htpc-manager.defaults
-	sudo cp -a ../conf/htpc-manager.defaults /etc/default/$app
-	sudo cp -a ../conf/htpc-manager.init /etc/init.d/$app
+	sudo sed -i "s@PATHTOCHANGE@$path@g" ../conf/$app.service
+	sudo sed -i "s@PORTTOCHANGE@$port@g" ../conf/$app.service
+	sudo cp -a ../conf/$app.service /etc/systemd/system/
+	sudo systemctl daemon-reload
+	sudo systemctl enable $app.service
 	
 # Redirect log file
 	log_path=/var/log/$app
@@ -53,15 +54,11 @@ app=htpc-manager
 # Set rights
 	sudo chown -R $app $final_path
 	sudo chown -R $app $data_path
-	sudo chmod +x /etc/init.d/$app
 	sudo chmod +x -R $final_path
 	sudo chmod +x -R $data_path
 	
 # Add service to YunoHost's monitoring
 	sudo yunohost service add $app --log $log_path --status "ps aux | grep $app | grep -v grep"
-	
-# Start daemon at boot
-	sudo update-rc.d $app defaults
 	
 # Start service
 	sudo service $app start
