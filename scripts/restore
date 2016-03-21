@@ -1,56 +1,46 @@
 #!/bin/bash
 
-# Common variable declaration
-app_id=htpc-manager
-app_user=htpc-manager
-app_install_dir="/opt/yunohost/${app_id}"
-app_data_dir="/home/yunohost.app/${app_id}"
+# causes the shell to exit if any subcommand or pipeline returns a non-zero status
+set -e
 
-# Retrieve arguments
-app_method="$(sudo yunohost app setting ${app_id} method)"
-app_domain="$(sudo yunohost app setting ${app_id} domain)"
+app=htpc-manager
 
 # The parameter $1 is the uncompressed restore directory location
-app_backup_dir="$1/apps/${app_id}"
+	backup_dir=$1/apps/$app
 
-
-# Restore files if localhost installation
-if [[ $app_method == "LOCAL"* ]]; then
-
+# Restore files
 	# Kill app
-	sudo service $app_id stop
-	sudo killall $app_id
+	sudo service $app stop
+	sudo killall $app
 
 	# Restore sources
-	sudo cp -a $app_backup_dir/sources/. $app_install_dir
+	sudo cp -a $backup_dir/sources/. /opt/yunohost/$app
 
 	# Restore data
-	sudo cp -a $app_backup_dir/data/. $app_data_dir
+	sudo cp -a $backup_dir/data/. /home/yunohost.app/$app
 	
 	# Restore daemon config
-	sudo cp -a $app_backup_dir/conf/$app_id.default /etc/default/$app_id 
-	sudo cp -a $app_backup_dir/conf/$app_id.init /etc/init.d/$app_id
+	sudo cp -a $backup_dir/conf/$app.default /etc/default/$app
+	sudo cp -a $backup_dir/conf/$app.init /etc/init.d/$app
 	
 	# Set rights
-	sudo chown -R $app_user $app_install_dir
-	sudo chown -R $app_user $app_data_dir
-	sudo chmod +x /etc/init.d/$app_id
-	sudo chmod +x -R $app_install_dir
-	sudo chmod +x -R $app_data_dir
+	sudo chown -R $app /opt/yunohost/$app
+	sudo chown -R $app /home/yunohost.app/$app
+	sudo chmod +x /etc/init.d/$app
+	sudo chmod +x -R /opt/yunohost/$app
+	sudo chmod +x -R /home/yunohost.app/$app
 	
 	# Start daemon at boot
-	sudo update-rc.d $app_id defaults
+	sudo update-rc.d $app defaults
 	
 	# Reload daemon
-	sudo service $app_id restart
-	
-fi
-
+	sudo service $app restart
 
 # Restore Nginx and YunoHost parameters
-sudo cp -a $app_backup_dir/yunohost/. /etc/yunohost/apps/$app_id
-sudo cp -a $app_backup_dir/nginx.conf /etc/nginx/conf.d/$app_domain.d/$app_id.conf
+	sudo cp -a $backup_dir/yunohost/. /etc/yunohost/apps/$app
+	domain=$(sudo yunohost app setting $app domain)
+	sudo cp -a $backup_dir/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 
 # Reload Nginx and regenerate SSOwat conf
-sudo service nginx reload
-sudo yunohost app ssowatconf
+	sudo service nginx reload
+	sudo yunohost app ssowatconf

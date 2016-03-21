@@ -1,23 +1,9 @@
-##<img src="https://github.com/styxit/HTPC-Manager/raw/master/interfaces/default/img/ios/homescreen.png" height="32" align="top"> htpc-manager_ynh <a href="https://yunohost.org/#/apps_in_progress_en"><img src="http://pix.toile-libre.org/upload/original/1440352021.png" height="32" align="right"></a>
+##HTPC-Manager for YunoHost
+Manage your HTPC from anywhere, all with one application.
 
-[![Latest Version](https://img.shields.io/badge/version-_--_-green.svg?style=flat)](https://github.com/Snipees/htpc-manager_ynh/releases)
-[![Status](https://img.shields.io/badge/status-in_progress-yellow.svg?style=flat)](https://github.com/Snipees/htpc-manager_ynh/milestones)
-[![Dependencies](https://img.shields.io/badge/dependencies-includes-lightgrey.svg?style=flat)](https://github.com/Snipees/htpc-manager_ynh#dependencies)
-[![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat)](https://raw.githubusercontent.com/Snipees/htpc-manager_ynh/master/LICENSE)
-[![Yunohost version](https://img.shields.io/badge/yunohost-2.2.0_tested-orange.svg?style=flat)](https://github.com/YunoHost/yunohost)
-[![GitHub issues](https://img.shields.io/github/issues/Snipees/htpc-manager_ynh.svg?style=flat)](https://github.com/Snipees/htpc-manager_ynh/issues)
-	
-[ **HTPC-Manager Integration for Yunohost** ]  
-This install script uses a Git-fork as sources for a local installation.  
-Otherwise the script sets a reverse-proxy to a remote instance.
-
+Using the [Hellowlol sources](https://github.com/Hellowlol/HTPC-Manager) as of 21/03/2016
 
 ### How to install:
-- Use **Install software** option from Yunohost admin panel
-- Find textbox tagged as **Install custom App from github**
-- Copy and paste: https://github.com/Snipees/htpc-manager_ynh
-- Choose the method installation: *local* or *remote* (as described above)
-- Answer the required questions to the selected method
 
 
 ### More information about:
@@ -25,23 +11,7 @@ Otherwise the script sets a reverse-proxy to a remote instance.
 - Yunohost : 		https://yunohost.org
 
 
-#### Special Thanks to the Yunohost Community:
-[anaqreon](https://github.com/anaqreon), 
-[aymhce](https://github.com/aymhce), 
-[beudbeud](https://github.com/abeudin), 
-[Chao-Man](https://github.com/Chao-Man), 
-[chtixof](https://github.com/chtixof), 
-[CotzaDev](https://github.com/CotzaDev), 
-[courgette](https://github.com/courgette), 
-[Jérôme](https://github.com/jeromelebleu), 
-[JocelynD](https://github.com/JocelynDelalande), 
-[Ju](https://github.com/julienmalik), 
-[Le Kload](https://github.com/Kloadut), 
-[lunarok](https://github.com/lunarok), 
-[maniackcrudelis](https://github.com/maniackcrudelis), 
-[Matlink](https://github.com/matlink), 
-[Moul](https://github.com/M5oul), 
-[polytan02](https://github.com/polytan02), 
-[scith](https://github.com/scith), 
-[tifred](https://github.com/drfred1981), 
-... :dizzy:
+#### Acknowledgements
+Thanks [Snipees](https://github.com/scith/htpc-manager_ynh) for the hard work!
+
+My fork is removing the remote instance (because my redirect app already does that) and replaces install from fork with install from source.

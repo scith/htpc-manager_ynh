@@ -5,13 +5,16 @@
     "en": "Manage your HTPC from anywhere",
     "fr": "Piloter votre HTPC où vous souhaitez"
   },
+  "url": "http://htpc.io",
   "license": "GPL-3",
   "maintainer": {
-    "name": "Snipees",
-    "email": "snipees@wareziens.net",
-    "url": "https://github.com/Snipees"
+    "name": "scith, Snipees",
+    "url": "https://github.com/scith/"
   },
   "multi_instance": "false",
+  "services": [
+        "python"
+    ],
   "arguments": {
     "install": [
       {
@@ -20,7 +23,7 @@
           "en": "Choose a domain for HTPC Manager",
           "fr": "Choisissez un domaine pour HTPC Manager"
         },
-        "example": "mydomain.org"
+        "example": "domain.org"
       },
       {
         "name": "path",
@@ -28,74 +31,8 @@
           "en": "Choose a path for HTPC Manager",
           "fr": "Choisissez un chemin pour HTPC Manager"
         },
-        "example": "/media-manager",
-        "default": "/htpc-manager"
-      },
-      {
-      	"name": "public",
-      	"ask": {
-          "en": "Is it a public application ?",
-          "fr": "Est-ce une application publique ?"
-      	},
-      	"choices": ["Yes", "No"],
-      	"default": "No"
-      },
-      {
-        "name": "method",
-        "ask": {
-          "en": "Choose installation method",
-          "fr": "Choisissez le type d'installation"
-        },
-      	"choices": ["LOCAL", "REMOTE"],
-      	"default": "LOCAL"
-      },
-      {
-        "name": "port",
-        "ask": {
-          "en": "LOCAL: Choose the listening port of the app",
-          "fr": "LOCAL: Choisissez le port d'écoute de l'application"
-        },
-        "example": "8085",
-        "default": "8085"
-      },
-      {
-        "name": "fork",
-        "ask": {
-          "en": "LOCAL: Source URL of GIT to use",
-          "fr": "LOCAL: URL du GIT source à utiliser"
-        },
-        "example": "https://github.com/styxit/HTPC-Manager",
-        "default": "https://github.com/Hellowlol/HTPC-Manager"
-      },
-      {
-        "name": "options",
-        "ask": {
-          "en": "LOCAL: Do you want to use XBMC with HTPC-Manager ?",
-          "fr": "LOCAL: Voulez-vous utiliser XBMC avec HTPC-Manager ?"
-        },
-        "choices": ["Yes", "No"],
-        "default": "No"
-      },
-      {
-        "name": "host",
-        "ask": {
-          "en": "REMOTE: Specify URL for the host",
-          "fr": "REMOTE: Indiquez l'URL de l'hôte"
-        },
-        "example": "http://192.168.1.100:8888/myapp",
-        "default": "http://"
+        "example": "/htpc",
+        "default": "/htpc"
       }
-    ],
-    "remove": [
-      {
-        "name": "data",
-        "ask": {
-          "en": "Would you like to keep data files ?",
-          "fr": "Souhaitez-vous conserver les données ?"
-        },
-        "choices": ["Yes", "No"],
-        "default": "Yes"
-      }
-    ]
   }
 }
