@@ -3,8 +3,18 @@ Manage your HTPC from anywhere, all with one application.
 
 Using the [Hellowlol sources](https://github.com/Hellowlol/HTPC-Manager) as of 21/03/2016
 
-### How to install:
-
+### How to setup:
+- Open up HTPC Manager and go to *Settings*
+- **DO NOT CHANGE anything in the "general" tab**
+- Transmission
+  - *IP / Host*: 127.0.0.1
+  - *Port*: 9091
+  - *Rpc url*: /torrent/transmission
+  - *Username*: transmission
+- Couchpotato: To be done
+- Sick Beard: To be done
+- Sickrage: To be done
+- Kodi: To be done
 
 ### More information about:
 - HTPC Manager : 	http://htpc.io
