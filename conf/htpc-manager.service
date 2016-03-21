@@ -6,8 +6,7 @@
   User=htpc-manager
   Group=htpc-manager
   Type=forking
-  ExecStart=/usr/bin/python /opt/yunohost/htpc-manager/Htpc.py --daemon --webdir PATHTOCHANGE --datadir /home/yunohost.app/htpc-manager --port PORTTOCHANGE --pidfile /var/run/htpc-manager/htpc-manager.pid
-  PIDFile=/var/run/htpc-manager/htpc-manager.pid
+  ExecStart=/usr/bin/python /opt/yunohost/htpc-manager/Htpc.py --daemon --webdir PATHTOCHANGE --host 127.0.0.1 --datadir /home/yunohost.app/htpc-manager --port PORTTOCHANGE
   KillMode=process
   Restart=on-failure
      
